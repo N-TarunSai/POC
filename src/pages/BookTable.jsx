@@ -1,3 +1,4 @@
+import React from 'react';
 import { useMemo, useState } from 'react';
 import '../styles/book.css';
 
@@ -63,7 +64,8 @@ export default function BookTable() {
         <h1 className="title">Book a Table</h1>
 
         <p className="info">
-          Please select a time slot to make sure the table is not allotted to others.
+          Please select a time slot to make sure the table is not allotted to
+          others.
         </p>
 
         <div className="form-row">
@@ -73,7 +75,15 @@ export default function BookTable() {
               id="date"
               type="date"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              min={new Date().toISOString().slice(0, 10)}
+              max={new Date(new Date().setMonth(new Date().getMonth() + 1))
+                .toISOString()
+                .slice(0, 10)}
+              onChange={(e) => {
+                setDate(e.target.value);
+                setTime("");
+                setSize("");
+              }}
               aria-label="Select booking date"
             />
           </div>
@@ -84,15 +94,17 @@ export default function BookTable() {
               value={time}
               onChange={(e) => setTime(e.target.value)}
               aria-label="Select booking time"
+              disabled={!date}
             >
               <option value="" disabled hidden>
                 Time
               </option>
-              {times.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
+              {date &&
+                times.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -102,6 +114,7 @@ export default function BookTable() {
               value={size}
               onChange={(e) => setSize(Number(e.target.value))}
               aria-label="Select party size"
+              disabled={!time}
             >
               <option value="" disabled hidden>
                 Party Size
@@ -115,7 +128,7 @@ export default function BookTable() {
           </div>
 
           {/* Book Now Button */}
-          <div style={{ alignSelf: 'end' }}>
+          <div style={{ alignSelf: "end" }}>
             <button
               id="btn"
               onClick={() => {
@@ -129,7 +142,7 @@ export default function BookTable() {
           </div>
         </div>
       </div>
-      
+
       <img
         className="Image"
         src="https://static.wixstatic.com/media/0b340f_78ad19e599d642a28de7ce823686cbc6~mv2.jpg/v1/fill/w_1785,h_911,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/0b340f_78ad19e599d642a28de7ce823686cbc6~mv2.jpg"
@@ -161,5 +174,5 @@ export default function BookTable() {
         </div>
       </Modal>
     </section>
-  );
+  );  
 }
